@@ -3,6 +3,15 @@
 __all__ = ['track']
 
 # Cell
+from nbdev.showdoc import *
+import xarray as xr
+import numpy as np
+import scipy.ndimage
+from skimage.measure import label, regionprops
+# import matplotlib.pyplot as plt
+
+
+# Cell
 def _morphological_operations(da, radius=8):
     '''Converts xarray.DataArray to binary, defines structuring element, and performs morphological closing then opening.
     Parameters
