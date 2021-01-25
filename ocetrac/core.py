@@ -90,7 +90,7 @@ def _wrap_labels(labels):
     # Concatenate and convert to binary
     res = labels.lon[1].values-labels.lon[0].values # resolution of longitude
     two_earths = xr.concat([earth1, earth2], dim='lon')
-    two_earths['lon'] = np.arange(float(da.lon[0].values),(two_earths.lon[-1].values*2)+res,res)
+    two_earths['lon'] = np.arange(float(two_earths.lon[0].values),(two_earths.lon[-1].values*2)+res,res)
     bitmap_binary_2E = two_earths.where(two_earths>0, drop=False, other=0)
     bitmap_binary_2E = bitmap_binary_2E.where(bitmap_binary_2E==0, drop=False, other=1)
     bitmap_bool_2E = bitmap_binary_2E>0
@@ -189,7 +189,7 @@ def track(da, radius=8, area_quantile=0.75):
     # Convert labels to DataArray
 
     labels = xr.DataArray(origonal_map, dims=['time','lat','lon'],
-                          coords={'time': label_sk3.time, 'lat': label_sk3.lat,'lon': label_sk3.lon})
+                          coords={'time': bitmap_binary_2E.time, 'lat': bitmap_binary_2E.lat,'lon': bitmap_binary_2E.lon})
     labels = labels.where(labels > 0, drop=False, other=np.nan)
 
 
