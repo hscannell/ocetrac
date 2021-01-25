@@ -12,6 +12,9 @@ entries:
     - output: web,pdf
       title: Ocetrac
       url: core.html
+    - output: web,pdf
+      title: Title
+      url: visualize.html
     output: web
     title: ocetrac
   output: web
