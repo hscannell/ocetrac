@@ -46,6 +46,11 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -89,9 +94,7 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s1">&#39;lsmask.nc&#39;</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">mask</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mnsst</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -455,49 +458,162 @@ dl.xr-attrs {
   stroke: currentColor;
   fill: currentColor;
 }
-</style><pre class='xr-text-repr-fallback'>&lt;xarray.Dataset&gt;
-Dimensions:  (lat: 180, lon: 360, time: 1)
-Coordinates:
-  * lat      (lat) float32 89.5 88.5 87.5 86.5 85.5 ... -86.5 -87.5 -88.5 -89.5
-  * lon      (lon) float32 0.5 1.5 2.5 3.5 4.5 ... 355.5 356.5 357.5 358.5 359.5
-  * time     (time) datetime64[ns] 1981-10-29
-Data variables:
-    mask     (time, lat, lon) float32 1.0 1.0 1.0 1.0 1.0 ... 0.0 0.0 0.0 0.0
-Attributes:
-    title:          NOAA Optimum Interpolation (OI) SST V2
-    Conventions:    CF-1.0
-    history:        Created 10/2002 by RHS
-    comments:       Data described in  Reynolds, R.W., N.A. Rayner, T.M.\nSmi...
-    platform:       Model
-    source:         NCEP Climate Modeling Branch
-    institution:    National Centers for Environmental Prediction
-    References:     https://www.psl.noaa.gov/data/gridded/data.noaa.oisst.v2....
-    dataset_title:  NOAA Optimum Interpolation (OI) SST V2
-    source_url:     http://www.emc.ncep.noaa.gov/research/cmb/sst_analysis/</pre><div class='xr-wrap' hidden><div class='xr-header'><div class='xr-obj-type'>xarray.Dataset</div></div><ul class='xr-sections'><li class='xr-section-item'><input id='section-74bd246b-c950-4fc2-8466-75e71c5f6ee5' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-74bd246b-c950-4fc2-8466-75e71c5f6ee5' class='xr-section-summary'  title='Expand/collapse section'>Dimensions:</label><div class='xr-section-inline-details'><ul class='xr-dim-list'><li><span class='xr-has-index'>lat</span>: 180</li><li><span class='xr-has-index'>lon</span>: 360</li><li><span class='xr-has-index'>time</span>: 1</li></ul></div><div class='xr-section-details'></div></li><li class='xr-section-item'><input id='section-c9468908-28f6-484d-b25e-80a0df374144' class='xr-section-summary-in' type='checkbox'  checked><label for='section-c9468908-28f6-484d-b25e-80a0df374144' class='xr-section-summary' >Coordinates: <span>(3)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lat</span></div><div class='xr-var-dims'>(lat)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>89.5 88.5 87.5 ... -88.5 -89.5</div><input id='attrs-f807f12f-c74d-4639-9aec-7bb69a7ecf6d' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-f807f12f-c74d-4639-9aec-7bb69a7ecf6d' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-48719cf0-0bfa-4481-bdef-a582ac6185ca' class='xr-var-data-in' type='checkbox'><label for='data-48719cf0-0bfa-4481-bdef-a582ac6185ca' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>actual_range :</span></dt><dd>[ 89.5 -89.5]</dd><dt><span>standard_name :</span></dt><dd>latitude</dd><dt><span>axis :</span></dt><dd>Y</dd><dt><span>coordinate_defines :</span></dt><dd>center</dd></dl></div><div class='xr-var-data'><pre>array([ 89.5,  88.5,  87.5,  86.5,  85.5,  84.5,  83.5,  82.5,  81.5,  80.5,
-        79.5,  78.5,  77.5,  76.5,  75.5,  74.5,  73.5,  72.5,  71.5,  70.5,
-        69.5,  68.5,  67.5,  66.5,  65.5,  64.5,  63.5,  62.5,  61.5,  60.5,
-        59.5,  58.5,  57.5,  56.5,  55.5,  54.5,  53.5,  52.5,  51.5,  50.5,
-        49.5,  48.5,  47.5,  46.5,  45.5,  44.5,  43.5,  42.5,  41.5,  40.5,
-        39.5,  38.5,  37.5,  36.5,  35.5,  34.5,  33.5,  32.5,  31.5,  30.5,
-        29.5,  28.5,  27.5,  26.5,  25.5,  24.5,  23.5,  22.5,  21.5,  20.5,
-        19.5,  18.5,  17.5,  16.5,  15.5,  14.5,  13.5,  12.5,  11.5,  10.5,
-         9.5,   8.5,   7.5,   6.5,   5.5,   4.5,   3.5,   2.5,   1.5,   0.5,
-        -0.5,  -1.5,  -2.5,  -3.5,  -4.5,  -5.5,  -6.5,  -7.5,  -8.5,  -9.5,
-       -10.5, -11.5, -12.5, -13.5, -14.5, -15.5, -16.5, -17.5, -18.5, -19.5,
-       -20.5, -21.5, -22.5, -23.5, -24.5, -25.5, -26.5, -27.5, -28.5, -29.5,
-       -30.5, -31.5, -32.5, -33.5, -34.5, -35.5, -36.5, -37.5, -38.5, -39.5,
-       -40.5, -41.5, -42.5, -43.5, -44.5, -45.5, -46.5, -47.5, -48.5, -49.5,
-       -50.5, -51.5, -52.5, -53.5, -54.5, -55.5, -56.5, -57.5, -58.5, -59.5,
-       -60.5, -61.5, -62.5, -63.5, -64.5, -65.5, -66.5, -67.5, -68.5, -69.5,
-       -70.5, -71.5, -72.5, -73.5, -74.5, -75.5, -76.5, -77.5, -78.5, -79.5,
-       -80.5, -81.5, -82.5, -83.5, -84.5, -85.5, -86.5, -87.5, -88.5, -89.5],
-      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lon</span></div><div class='xr-var-dims'>(lon)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>0.5 1.5 2.5 ... 357.5 358.5 359.5</div><input id='attrs-58c16287-df16-459b-9066-60bb59537319' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-58c16287-df16-459b-9066-60bb59537319' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-1a598390-f923-4a0c-9b11-1ff565a646b8' class='xr-var-data-in' type='checkbox'><label for='data-1a598390-f923-4a0c-9b11-1ff565a646b8' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>actual_range :</span></dt><dd>[  0.5 359.5]</dd><dt><span>standard_name :</span></dt><dd>longitude</dd><dt><span>axis :</span></dt><dd>X</dd><dt><span>coordinate_defines :</span></dt><dd>center</dd></dl></div><div class='xr-var-data'><pre>array([  0.5,   1.5,   2.5, ..., 357.5, 358.5, 359.5], dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>1981-10-29</div><input id='attrs-203180c7-2909-45e2-96a5-f4616632b6f5' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-203180c7-2909-45e2-96a5-f4616632b6f5' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-b35853ab-f86f-4e06-b735-9c9923b5a973' class='xr-var-data-in' type='checkbox'><label for='data-b35853ab-f86f-4e06-b735-9c9923b5a973' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Time</dd><dt><span>actual_range :</span></dt><dd>[66410. 66410.]</dd><dt><span>delta_t :</span></dt><dd>0000-00-00 00:00:00</dd><dt><span>standard_name :</span></dt><dd>time</dd><dt><span>axis :</span></dt><dd>T</dd></dl></div><div class='xr-var-data'><pre>array([&#x27;1981-10-29T00:00:00.000000000&#x27;], dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-8d071dc6-bcbe-4664-b164-82143f44eecd' class='xr-section-summary-in' type='checkbox'  checked><label for='section-8d071dc6-bcbe-4664-b164-82143f44eecd' class='xr-section-summary' >Data variables: <span>(1)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span>mask</span></div><div class='xr-var-dims'>(time, lat, lon)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>...</div><input id='attrs-6e1e929c-288b-4cb2-83ad-1e4bc42a61ec' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-6e1e929c-288b-4cb2-83ad-1e4bc42a61ec' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-4a8fe9eb-e497-4d92-9e62-ce8ddea08fce' class='xr-var-data-in' type='checkbox'><label for='data-4a8fe9eb-e497-4d92-9e62-ce8ddea08fce' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Land Sea Mask</dd><dt><span>valid_range :</span></dt><dd>[0 1]</dd><dt><span>units :</span></dt><dd>none</dd><dt><span>dataset :</span></dt><dd>NOAA Optimum Interpolation (OI) SST V2</dd><dt><span>var_desc :</span></dt><dd>Land-sea mask</dd><dt><span>level_desc :</span></dt><dd>Surface</dd><dt><span>statistic :</span></dt><dd>Other</dd></dl></div><div class='xr-var-data'><pre>array([[[1., 1., ..., 1., 1.],
-        [1., 1., ..., 1., 1.],
+</style><pre class='xr-text-repr-fallback'>&lt;xarray.DataArray &#x27;sst&#x27; (time: 464, lat: 720, lon: 1440)&gt;
+array([[[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
         ...,
-        [0., 0., ..., 0., 0.],
-        [0., 0., ..., 0., 0.]]], dtype=float32)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-435de3e5-837c-4ade-bde4-799bf3e7a7d3' class='xr-section-summary-in' type='checkbox'  ><label for='section-435de3e5-837c-4ade-bde4-799bf3e7a7d3' class='xr-section-summary' >Attributes: <span>(10)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'><dt><span>title :</span></dt><dd>NOAA Optimum Interpolation (OI) SST V2</dd><dt><span>Conventions :</span></dt><dd>CF-1.0</dd><dt><span>history :</span></dt><dd>Created 10/2002 by RHS</dd><dt><span>comments :</span></dt><dd>Data described in  Reynolds, R.W., N.A. Rayner, T.M.
-Smith, D.C. Stokes, and W. Wang, 2002: An Improved In Situ and Satellite
-SST Analysis for Climate, J. Climate</dd><dt><span>platform :</span></dt><dd>Model</dd><dt><span>source :</span></dt><dd>NCEP Climate Modeling Branch</dd><dt><span>institution :</span></dt><dd>National Centers for Environmental Prediction</dd><dt><span>References :</span></dt><dd>https://www.psl.noaa.gov/data/gridded/data.noaa.oisst.v2.html</dd><dt><span>dataset_title :</span></dt><dd>NOAA Optimum Interpolation (OI) SST V2</dd><dt><span>source_url :</span></dt><dd>http://www.emc.ncep.noaa.gov/research/cmb/sst_analysis/</dd></dl></div></li></ul></div></div>
+        [-1.3066666, -1.3066666, -1.3073334, ..., -1.3066666,
+         -1.3066666, -1.3063333],
+        [-1.3096668, -1.3099998, -1.3099998, ..., -1.3093333,
+         -1.3093333, -1.3096668],
+        [-1.312    , -1.312    , -1.312    , ..., -1.312    ,
+         -1.312    , -1.312    ]],
+
+       [[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+...
+        [-1.7780645, -1.7780645, -1.7780645, ..., -1.778387 ,
+         -1.778387 , -1.778387 ],
+        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
+         -1.778387 , -1.778387 ],
+        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
+         -1.778387 , -1.778387 ]],
+
+       [[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        ...,
+        [-1.7738461, -1.7738461, -1.7738461, ..., -1.7738461,
+         -1.7738461, -1.7738461],
+        [-1.7746152, -1.7746152, -1.7746152, ..., -1.7746152,
+         -1.7746152, -1.7746152],
+        [-1.7749999, -1.7749999, -1.7749999, ..., -1.7749999,
+         -1.7749999, -1.7749999]]], dtype=float32)
+Coordinates:
+  * time     (time) datetime64[ns] 1981-09-01 1981-10-01 ... 2020-04-01
+    zlev     float32 0.0
+  * lat      (lat) float32 -89.875 -89.625 -89.375 ... 89.375 89.625 89.875
+  * lon      (lon) float32 0.125 0.375 0.625 0.875 ... 359.375 359.625 359.875</pre><div class='xr-wrap' hidden><div class='xr-header'><div class='xr-obj-type'>xarray.DataArray</div><div class='xr-array-name'>'sst'</div><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 464</li><li><span class='xr-has-index'>lat</span>: 720</li><li><span class='xr-has-index'>lon</span>: 1440</li></ul></div><ul class='xr-sections'><li class='xr-section-item'><div class='xr-array-wrap'><input id='section-b9a70328-e31f-427d-ba76-0fbffda8670f' class='xr-array-in' type='checkbox' checked><label for='section-b9a70328-e31f-427d-ba76-0fbffda8670f' title='Show/hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-array-preview xr-preview'><span>nan nan nan nan nan ... -1.7749999 -1.7749999 -1.7749999 -1.7749999</span></div><div class='xr-array-data'><pre>array([[[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        ...,
+        [-1.3066666, -1.3066666, -1.3073334, ..., -1.3066666,
+         -1.3066666, -1.3063333],
+        [-1.3096668, -1.3099998, -1.3099998, ..., -1.3093333,
+         -1.3093333, -1.3096668],
+        [-1.312    , -1.312    , -1.312    , ..., -1.312    ,
+         -1.312    , -1.312    ]],
+
+       [[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+...
+        [-1.7780645, -1.7780645, -1.7780645, ..., -1.778387 ,
+         -1.778387 , -1.778387 ],
+        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
+         -1.778387 , -1.778387 ],
+        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
+         -1.778387 , -1.778387 ]],
+
+       [[       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        [       nan,        nan,        nan, ...,        nan,
+                nan,        nan],
+        ...,
+        [-1.7738461, -1.7738461, -1.7738461, ..., -1.7738461,
+         -1.7738461, -1.7738461],
+        [-1.7746152, -1.7746152, -1.7746152, ..., -1.7746152,
+         -1.7746152, -1.7746152],
+        [-1.7749999, -1.7749999, -1.7749999, ..., -1.7749999,
+         -1.7749999, -1.7749999]]], dtype=float32)</pre></div></div></li><li class='xr-section-item'><input id='section-2015f313-ec86-46cf-91de-7668778732ec' class='xr-section-summary-in' type='checkbox'  checked><label for='section-2015f313-ec86-46cf-91de-7668778732ec' class='xr-section-summary' >Coordinates: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>1981-09-01 ... 2020-04-01</div><input id='attrs-5337d6d1-51c2-4fbd-b838-a07291dc0e4a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-5337d6d1-51c2-4fbd-b838-a07291dc0e4a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-c5ad703d-8e51-4060-abec-02b1fc8e23d9' class='xr-var-data-in' type='checkbox'><label for='data-c5ad703d-8e51-4060-abec-02b1fc8e23d9' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;1981-09-01T00:00:00.000000000&#x27;, &#x27;1981-10-01T00:00:00.000000000&#x27;,
+       &#x27;1981-11-01T00:00:00.000000000&#x27;, ..., &#x27;2020-02-01T00:00:00.000000000&#x27;,
+       &#x27;2020-03-01T00:00:00.000000000&#x27;, &#x27;2020-04-01T00:00:00.000000000&#x27;],
+      dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>zlev</span></div><div class='xr-var-dims'>()</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>0.0</div><input id='attrs-ab1d04f0-19fe-427e-a36d-bf032f34ac02' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-ab1d04f0-19fe-427e-a36d-bf032f34ac02' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8f4cefc5-3ee4-44e5-a93f-6ac664301d22' class='xr-var-data-in' type='checkbox'><label for='data-8f4cefc5-3ee4-44e5-a93f-6ac664301d22' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Sea surface height</dd><dt><span>units :</span></dt><dd>meters</dd><dt><span>actual_range :</span></dt><dd>0, 0</dd></dl></div><div class='xr-var-data'><pre>array(0., dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lat</span></div><div class='xr-var-dims'>(lat)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-89.875 -89.625 ... 89.625 89.875</div><input id='attrs-48842ff6-5819-4556-b9a8-92ea0c57e640' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-48842ff6-5819-4556-b9a8-92ea0c57e640' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-6cdbb5a1-23f3-48a9-b3cb-41c7dd541e43' class='xr-var-data-in' type='checkbox'><label for='data-6cdbb5a1-23f3-48a9-b3cb-41c7dd541e43' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>grids :</span></dt><dd>Uniform grid from -89.875 to 89.875 by 0.25</dd></dl></div><div class='xr-var-data'><pre>array([-89.875, -89.625, -89.375, ...,  89.375,  89.625,  89.875],
+      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lon</span></div><div class='xr-var-dims'>(lon)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>0.125 0.375 ... 359.625 359.875</div><input id='attrs-c6754206-4273-49ad-8c2a-c0a26167fb27' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-c6754206-4273-49ad-8c2a-c0a26167fb27' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d04e6644-9d49-4c6b-b908-2ae0731ca3e1' class='xr-var-data-in' type='checkbox'><label for='data-d04e6644-9d49-4c6b-b908-2ae0731ca3e1' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>grids :</span></dt><dd>Uniform grid from 0.125 to 359.875 by 0.25</dd></dl></div><div class='xr-var-data'><pre>array([1.25000e-01, 3.75000e-01, 6.25000e-01, ..., 3.59375e+02, 3.59625e+02,
+       3.59875e+02], dtype=float32)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-c1d24935-9f8d-4ef4-a900-3d6fd60420cf' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-c1d24935-9f8d-4ef4-a900-3d6fd60420cf' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s1">&#39;lsmask.nc&#39;</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">reproject</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">dm</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,:]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">))</span>
+<span class="n">land_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">reproject</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">dm</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">dm</span><span class="o">.</span><span class="n">lon</span><span class="p">})</span>  
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">land_mask</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x2b9bbe714520&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
 </div>
 
 </div>
@@ -563,6 +679,136 @@ SST Analysis for Climate, J. Climate</dd><dt><span>platform :</span></dt><dd>Mod
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/glade/u/home/scanh/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/array/numpy_compat.py:41: RuntimeWarning: invalid value encountered in true_divide
+  x = np.divide(x1, x2, out)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-111-2fa376126f41&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> 
+<span class="ansi-green-intense-fg ansi-bold">     11</span> <span class="ansi-red-fg"># resulting coefficients of the model</span>
+<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg"> </span>sst_mod <span class="ansi-blue-fg">=</span> xr<span class="ansi-blue-fg">.</span>DataArray<span class="ansi-blue-fg">(</span>pmodel_da<span class="ansi-blue-fg">.</span>dot<span class="ansi-blue-fg">(</span>mnsst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;coeff&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;lat&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;lon&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">&#39;coeff&#39;</span><span class="ansi-blue-fg">:</span>np<span class="ansi-blue-fg">.</span>arange<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">7</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lat&#39;</span><span class="ansi-blue-fg">:</span>mnsst<span class="ansi-blue-fg">.</span>lat<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lon&#39;</span><span class="ansi-blue-fg">:</span>mnsst<span class="ansi-blue-fg">.</span>lon<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">}</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span> 
+<span class="ansi-green-intense-fg ansi-bold">     14</span> <span class="ansi-red-fg"># Construction of the mean, trend, and seasonal cycle</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/dataarray.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, data, coords, dims, name, attrs, indexes, fastpath)</span>
+<span class="ansi-green-intense-fg ansi-bold">    341</span> 
+<span class="ansi-green-intense-fg ansi-bold">    342</span>             data <span class="ansi-blue-fg">=</span> _check_data_shape<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 343</span><span class="ansi-red-fg">             </span>data <span class="ansi-blue-fg">=</span> as_compatible_data<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    344</span>             coords<span class="ansi-blue-fg">,</span> dims <span class="ansi-blue-fg">=</span> _infer_coords_and_dims<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    345</span>             variable <span class="ansi-blue-fg">=</span> Variable<span class="ansi-blue-fg">(</span>dims<span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">,</span> attrs<span class="ansi-blue-fg">,</span> fastpath<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">as_compatible_data</span><span class="ansi-blue-fg">(data, fastpath)</span>
+<span class="ansi-green-intense-fg ansi-bold">    215</span> 
+<span class="ansi-green-intense-fg ansi-bold">    216</span>     <span class="ansi-red-fg"># we don&#39;t want nested self-described arrays</span>
+<span class="ansi-green-fg">--&gt; 217</span><span class="ansi-red-fg">     </span>data <span class="ansi-blue-fg">=</span> getattr<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;values&#34;</span><span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    218</span> 
+<span class="ansi-green-intense-fg ansi-bold">    219</span>     <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> np<span class="ansi-blue-fg">.</span>ma<span class="ansi-blue-fg">.</span>MaskedArray<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/dataarray.py</span> in <span class="ansi-cyan-fg">values</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    567</span>     <span class="ansi-green-fg">def</span> values<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">-&gt;</span> np<span class="ansi-blue-fg">.</span>ndarray<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    568</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;The array&#39;s data as a numpy.ndarray&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; 569</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>variable<span class="ansi-blue-fg">.</span>values
+<span class="ansi-green-intense-fg ansi-bold">    570</span> 
+<span class="ansi-green-intense-fg ansi-bold">    571</span>     <span class="ansi-blue-fg">@</span>values<span class="ansi-blue-fg">.</span>setter
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">values</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    508</span>     <span class="ansi-green-fg">def</span> values<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    509</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;The variable&#39;s data as a numpy.ndarray&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; 510</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> _as_array_or_item<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    511</span> 
+<span class="ansi-green-intense-fg ansi-bold">    512</span>     <span class="ansi-blue-fg">@</span>values<span class="ansi-blue-fg">.</span>setter
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">_as_array_or_item</span><span class="ansi-blue-fg">(data)</span>
+<span class="ansi-green-intense-fg ansi-bold">    270</span>         data <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">.</span>get<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    271</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 272</span><span class="ansi-red-fg">         </span>data <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>asarray<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    273</span>     <span class="ansi-green-fg">if</span> data<span class="ansi-blue-fg">.</span>ndim <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    274</span>         <span class="ansi-green-fg">if</span> data<span class="ansi-blue-fg">.</span>dtype<span class="ansi-blue-fg">.</span>kind <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#34;M&#34;</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/numpy/core/_asarray.py</span> in <span class="ansi-cyan-fg">asarray</span><span class="ansi-blue-fg">(a, dtype, order)</span>
+<span class="ansi-green-intense-fg ansi-bold">     81</span> 
+<span class="ansi-green-intense-fg ansi-bold">     82</span>     &#34;&#34;&#34;
+<span class="ansi-green-fg">---&gt; 83</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> array<span class="ansi-blue-fg">(</span>a<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">,</span> copy<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> order<span class="ansi-blue-fg">=</span>order<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     84</span> 
+<span class="ansi-green-intense-fg ansi-bold">     85</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/array/core.py</span> in <span class="ansi-cyan-fg">__array__</span><span class="ansi-blue-fg">(self, dtype, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1374</span> 
+<span class="ansi-green-intense-fg ansi-bold">   1375</span>     <span class="ansi-green-fg">def</span> __array__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">-&gt; 1376</span><span class="ansi-red-fg">         </span>x <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>compute<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   1377</span>         <span class="ansi-green-fg">if</span> dtype <span class="ansi-green-fg">and</span> x<span class="ansi-blue-fg">.</span>dtype <span class="ansi-blue-fg">!=</span> dtype<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   1378</span>             x <span class="ansi-blue-fg">=</span> x<span class="ansi-blue-fg">.</span>astype<span class="ansi-blue-fg">(</span>dtype<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/base.py</span> in <span class="ansi-cyan-fg">compute</span><span class="ansi-blue-fg">(self, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    165</span>         dask<span class="ansi-blue-fg">.</span>base<span class="ansi-blue-fg">.</span>compute
+<span class="ansi-green-intense-fg ansi-bold">    166</span>         &#34;&#34;&#34;
+<span class="ansi-green-fg">--&gt; 167</span><span class="ansi-red-fg">         </span><span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> compute<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> traverse<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    168</span>         <span class="ansi-green-fg">return</span> result
+<span class="ansi-green-intense-fg ansi-bold">    169</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/base.py</span> in <span class="ansi-cyan-fg">compute</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    450</span>         postcomputes<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">.</span>__dask_postcompute__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    451</span> 
+<span class="ansi-green-fg">--&gt; 452</span><span class="ansi-red-fg">     </span>results <span class="ansi-blue-fg">=</span> schedule<span class="ansi-blue-fg">(</span>dsk<span class="ansi-blue-fg">,</span> keys<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    453</span>     <span class="ansi-green-fg">return</span> repack<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>f<span class="ansi-blue-fg">(</span>r<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> r<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> a<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>results<span class="ansi-blue-fg">,</span> postcomputes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    454</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/threaded.py</span> in <span class="ansi-cyan-fg">get</span><span class="ansi-blue-fg">(dsk, result, cache, num_workers, pool, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">     74</span>                 pools<span class="ansi-blue-fg">[</span>thread<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span>num_workers<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> pool
+<span class="ansi-green-intense-fg ansi-bold">     75</span> 
+<span class="ansi-green-fg">---&gt; 76</span><span class="ansi-red-fg">     results = get_async(
+</span><span class="ansi-green-intense-fg ansi-bold">     77</span>         pool<span class="ansi-blue-fg">.</span>apply_async<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">     78</span>         len<span class="ansi-blue-fg">(</span>pool<span class="ansi-blue-fg">.</span>_pool<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/local.py</span> in <span class="ansi-cyan-fg">get_async</span><span class="ansi-blue-fg">(apply_async, num_workers, dsk, result, cache, get_id, rerun_exceptions_locally, pack_exception, raise_exception, callbacks, dumps, loads, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    473</span>             <span class="ansi-red-fg"># Main loop, wait on tasks to finish, insert new ones</span>
+<span class="ansi-green-intense-fg ansi-bold">    474</span>             <span class="ansi-green-fg">while</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;waiting&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">or</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;ready&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">or</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;running&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 475</span><span class="ansi-red-fg">                 </span>key<span class="ansi-blue-fg">,</span> res_info<span class="ansi-blue-fg">,</span> failed <span class="ansi-blue-fg">=</span> queue_get<span class="ansi-blue-fg">(</span>queue<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    476</span>                 <span class="ansi-green-fg">if</span> failed<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    477</span>                     exc<span class="ansi-blue-fg">,</span> tb <span class="ansi-blue-fg">=</span> loads<span class="ansi-blue-fg">(</span>res_info<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/local.py</span> in <span class="ansi-cyan-fg">queue_get</span><span class="ansi-blue-fg">(q)</span>
+<span class="ansi-green-intense-fg ansi-bold">    131</span> 
+<span class="ansi-green-intense-fg ansi-bold">    132</span>     <span class="ansi-green-fg">def</span> queue_get<span class="ansi-blue-fg">(</span>q<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 133</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> q<span class="ansi-blue-fg">.</span>get<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    134</span> 
+<span class="ansi-green-intense-fg ansi-bold">    135</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/queue.py</span> in <span class="ansi-cyan-fg">get</span><span class="ansi-blue-fg">(self, block, timeout)</span>
+<span class="ansi-green-intense-fg ansi-bold">    169</span>             <span class="ansi-green-fg">elif</span> timeout <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    170</span>                 <span class="ansi-green-fg">while</span> <span class="ansi-green-fg">not</span> self<span class="ansi-blue-fg">.</span>_qsize<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 171</span><span class="ansi-red-fg">                     </span>self<span class="ansi-blue-fg">.</span>not_empty<span class="ansi-blue-fg">.</span>wait<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    172</span>             <span class="ansi-green-fg">elif</span> timeout <span class="ansi-blue-fg">&lt;</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    173</span>                 <span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;&#39;timeout&#39; must be a non-negative number&#34;</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/threading.py</span> in <span class="ansi-cyan-fg">wait</span><span class="ansi-blue-fg">(self, timeout)</span>
+<span class="ansi-green-intense-fg ansi-bold">    310</span>         <span class="ansi-green-fg">try</span><span class="ansi-blue-fg">:</span>    <span class="ansi-red-fg"># restore state no matter what (e.g., KeyboardInterrupt)</span>
+<span class="ansi-green-intense-fg ansi-bold">    311</span>             <span class="ansi-green-fg">if</span> timeout <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 312</span><span class="ansi-red-fg">                 </span>waiter<span class="ansi-blue-fg">.</span>acquire<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    313</span>                 gotit <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">True</span>
+<span class="ansi-green-intense-fg ansi-bold">    314</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+</div>
+</div>
+
 </div>
 </div>
 
