@@ -189,7 +189,7 @@ def track(da, radius=8, area_quantile=0.75):
     # Convert labels to DataArray
 
     labels = xr.DataArray(origonal_map, dims=['time','lat','lon'],
-                          coords={'time': bitmap_binary_2E.time, 'lat': bitmap_binary_2E.lat,'lon': bitmap_binary_2E.lon})
+                          coords={'time': binary_images.time, 'lat': binary_images.lat,'lon': binary_images.lon})
     labels = labels.where(labels > 0, drop=False, other=np.nan)
 
 
