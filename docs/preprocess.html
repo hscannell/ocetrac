@@ -1,6 +1,6 @@
 ---
 
-title: Title
+title: 00_preprocess.ipynb
 
 
 keywords: fastai
@@ -29,13 +29,6 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Preprocess-Gridded-Data-to-find-Anomalies-and-Extreme-Values">Preprocess Gridded Data to find Anomalies and Extreme Values<a class="anchor-link" href="#Preprocess-Gridded-Data-to-find-Anomalies-and-Extreme-Values"> </a></h3><p>This notebook provides an example of how one might preprocess gridded sea surface temperature (SST) data to extract anomalies and detect extreme values. Here we will use monthly mean SST from the <a href="https://www.ncdc.noaa.gov/oisst/data-access">NOAA Optimum Interpolation Sea Surface Temperature</a> (OISST v2.1) dataset. This data is measured from a blend of satellite and in-situ observations. We elect to use data from AVHRR-only satellites. This product is available from September 1981 through present on a 1/4º global regular grid.</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -47,9 +40,7 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
 <span class="kn">import</span> <span class="nn">warnings</span>
-
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -62,7 +53,11 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="1.-Import-data">1. Import data<a class="anchor-link" href="#1.-Import-data"> </a></h3>
+<h3 id="1.-Import-data">1. Import data<a class="anchor-link" href="#1.-Import-data"> </a></h3><ul>
+<li>load the daily OISST dataset and resample to monthly means</li>
+<li>load the landmask </li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -76,484 +71,12 @@ nb_path: "notebooks/marine_heatwaves/00_preprocess.ipynb"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/glade/scratch/scanh/OISST/&#39;</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s1">&#39;avhrr-only-v2.*.nc&#39;</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;by_coords&#39;</span><span class="p">)</span>
 
-<span class="c1"># calculate monthly mean sst</span>
+<span class="c1"># Calculate monthly mean SST</span>
 <span class="n">mnsst</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sst</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s1">&#39;MS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="n">mnsst</span><span class="o">.</span><span class="n">load</span><span class="p">();</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mnsst</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div><svg style="position: absolute; width: 0; height: 0; overflow: hidden">
-<defs>
-<symbol id="icon-database" viewBox="0 0 32 32">
-<path d="M16 0c-8.837 0-16 2.239-16 5v4c0 2.761 7.163 5 16 5s16-2.239 16-5v-4c0-2.761-7.163-5-16-5z"></path>
-<path d="M16 17c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
-<path d="M16 26c-8.837 0-16-2.239-16-5v6c0 2.761 7.163 5 16 5s16-2.239 16-5v-6c0 2.761-7.163 5-16 5z"></path>
-</symbol>
-<symbol id="icon-file-text2" viewBox="0 0 32 32">
-<path d="M28.681 7.159c-0.694-0.947-1.662-2.053-2.724-3.116s-2.169-2.030-3.116-2.724c-1.612-1.182-2.393-1.319-2.841-1.319h-15.5c-1.378 0-2.5 1.121-2.5 2.5v27c0 1.378 1.122 2.5 2.5 2.5h23c1.378 0 2.5-1.122 2.5-2.5v-19.5c0-0.448-0.137-1.23-1.319-2.841zM24.543 5.457c0.959 0.959 1.712 1.825 2.268 2.543h-4.811v-4.811c0.718 0.556 1.584 1.309 2.543 2.268zM28 29.5c0 0.271-0.229 0.5-0.5 0.5h-23c-0.271 0-0.5-0.229-0.5-0.5v-27c0-0.271 0.229-0.5 0.5-0.5 0 0 15.499-0 15.5 0v7c0 0.552 0.448 1 1 1h7v19.5z"></path>
-<path d="M23 26h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-<path d="M23 22h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-<path d="M23 18h-14c-0.552 0-1-0.448-1-1s0.448-1 1-1h14c0.552 0 1 0.448 1 1s-0.448 1-1 1z"></path>
-</symbol>
-</defs>
-</svg>
-<style>/* CSS stylesheet for displaying xarray objects in jupyterlab.
- *
- */
-
-:root {
-  --xr-font-color0: var(--jp-content-font-color0, rgba(0, 0, 0, 1));
-  --xr-font-color2: var(--jp-content-font-color2, rgba(0, 0, 0, 0.54));
-  --xr-font-color3: var(--jp-content-font-color3, rgba(0, 0, 0, 0.38));
-  --xr-border-color: var(--jp-border-color2, #e0e0e0);
-  --xr-disabled-color: var(--jp-layout-color3, #bdbdbd);
-  --xr-background-color: var(--jp-layout-color0, white);
-  --xr-background-color-row-even: var(--jp-layout-color1, white);
-  --xr-background-color-row-odd: var(--jp-layout-color2, #eeeeee);
-}
-
-html[theme=dark],
-body.vscode-dark {
-  --xr-font-color0: rgba(255, 255, 255, 1);
-  --xr-font-color2: rgba(255, 255, 255, 0.54);
-  --xr-font-color3: rgba(255, 255, 255, 0.38);
-  --xr-border-color: #1F1F1F;
-  --xr-disabled-color: #515151;
-  --xr-background-color: #111111;
-  --xr-background-color-row-even: #111111;
-  --xr-background-color-row-odd: #313131;
-}
-
-.xr-wrap {
-  display: block;
-  min-width: 300px;
-  max-width: 700px;
-}
-
-.xr-text-repr-fallback {
-  /* fallback to plain text repr when CSS is not injected (untrusted notebook) */
-  display: none;
-}
-
-.xr-header {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  margin-bottom: 4px;
-  border-bottom: solid 1px var(--xr-border-color);
-}
-
-.xr-header > div,
-.xr-header > ul {
-  display: inline;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.xr-obj-type,
-.xr-array-name {
-  margin-left: 2px;
-  margin-right: 10px;
-}
-
-.xr-obj-type {
-  color: var(--xr-font-color2);
-}
-
-.xr-sections {
-  padding-left: 0 !important;
-  display: grid;
-  grid-template-columns: 150px auto auto 1fr 20px 20px;
-}
-
-.xr-section-item {
-  display: contents;
-}
-
-.xr-section-item input {
-  display: none;
-}
-
-.xr-section-item input + label {
-  color: var(--xr-disabled-color);
-}
-
-.xr-section-item input:enabled + label {
-  cursor: pointer;
-  color: var(--xr-font-color2);
-}
-
-.xr-section-item input:enabled + label:hover {
-  color: var(--xr-font-color0);
-}
-
-.xr-section-summary {
-  grid-column: 1;
-  color: var(--xr-font-color2);
-  font-weight: 500;
-}
-
-.xr-section-summary > span {
-  display: inline-block;
-  padding-left: 0.5em;
-}
-
-.xr-section-summary-in:disabled + label {
-  color: var(--xr-font-color2);
-}
-
-.xr-section-summary-in + label:before {
-  display: inline-block;
-  content: '►';
-  font-size: 11px;
-  width: 15px;
-  text-align: center;
-}
-
-.xr-section-summary-in:disabled + label:before {
-  color: var(--xr-disabled-color);
-}
-
-.xr-section-summary-in:checked + label:before {
-  content: '▼';
-}
-
-.xr-section-summary-in:checked + label > span {
-  display: none;
-}
-
-.xr-section-summary,
-.xr-section-inline-details {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
-.xr-section-inline-details {
-  grid-column: 2 / -1;
-}
-
-.xr-section-details {
-  display: none;
-  grid-column: 1 / -1;
-  margin-bottom: 5px;
-}
-
-.xr-section-summary-in:checked ~ .xr-section-details {
-  display: contents;
-}
-
-.xr-array-wrap {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 20px auto;
-}
-
-.xr-array-wrap > label {
-  grid-column: 1;
-  vertical-align: top;
-}
-
-.xr-preview {
-  color: var(--xr-font-color3);
-}
-
-.xr-array-preview,
-.xr-array-data {
-  padding: 0 5px !important;
-  grid-column: 2;
-}
-
-.xr-array-data,
-.xr-array-in:checked ~ .xr-array-preview {
-  display: none;
-}
-
-.xr-array-in:checked ~ .xr-array-data,
-.xr-array-preview {
-  display: inline-block;
-}
-
-.xr-dim-list {
-  display: inline-block !important;
-  list-style: none;
-  padding: 0 !important;
-  margin: 0;
-}
-
-.xr-dim-list li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
-
-.xr-dim-list:before {
-  content: '(';
-}
-
-.xr-dim-list:after {
-  content: ')';
-}
-
-.xr-dim-list li:not(:last-child):after {
-  content: ',';
-  padding-right: 5px;
-}
-
-.xr-has-index {
-  font-weight: bold;
-}
-
-.xr-var-list,
-.xr-var-item {
-  display: contents;
-}
-
-.xr-var-item > div,
-.xr-var-item label,
-.xr-var-item > .xr-var-name span {
-  background-color: var(--xr-background-color-row-even);
-  margin-bottom: 0;
-}
-
-.xr-var-item > .xr-var-name:hover span {
-  padding-right: 5px;
-}
-
-.xr-var-list > li:nth-child(odd) > div,
-.xr-var-list > li:nth-child(odd) > label,
-.xr-var-list > li:nth-child(odd) > .xr-var-name span {
-  background-color: var(--xr-background-color-row-odd);
-}
-
-.xr-var-name {
-  grid-column: 1;
-}
-
-.xr-var-dims {
-  grid-column: 2;
-}
-
-.xr-var-dtype {
-  grid-column: 3;
-  text-align: right;
-  color: var(--xr-font-color2);
-}
-
-.xr-var-preview {
-  grid-column: 4;
-}
-
-.xr-var-name,
-.xr-var-dims,
-.xr-var-dtype,
-.xr-preview,
-.xr-attrs dt {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-right: 10px;
-}
-
-.xr-var-name:hover,
-.xr-var-dims:hover,
-.xr-var-dtype:hover,
-.xr-attrs dt:hover {
-  overflow: visible;
-  width: auto;
-  z-index: 1;
-}
-
-.xr-var-attrs,
-.xr-var-data {
-  display: none;
-  background-color: var(--xr-background-color) !important;
-  padding-bottom: 5px !important;
-}
-
-.xr-var-attrs-in:checked ~ .xr-var-attrs,
-.xr-var-data-in:checked ~ .xr-var-data {
-  display: block;
-}
-
-.xr-var-data > table {
-  float: right;
-}
-
-.xr-var-name span,
-.xr-var-data,
-.xr-attrs {
-  padding-left: 25px !important;
-}
-
-.xr-attrs,
-.xr-var-attrs,
-.xr-var-data {
-  grid-column: 1 / -1;
-}
-
-dl.xr-attrs {
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: 125px auto;
-}
-
-.xr-attrs dt, dd {
-  padding: 0;
-  margin: 0;
-  float: left;
-  padding-right: 10px;
-  width: auto;
-}
-
-.xr-attrs dt {
-  font-weight: normal;
-  grid-column: 1;
-}
-
-.xr-attrs dt:hover span {
-  display: inline-block;
-  background: var(--xr-background-color);
-  padding-right: 10px;
-}
-
-.xr-attrs dd {
-  grid-column: 2;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-.xr-icon-database,
-.xr-icon-file-text2 {
-  display: inline-block;
-  vertical-align: middle;
-  width: 1em;
-  height: 1.5em !important;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
-}
-</style><pre class='xr-text-repr-fallback'>&lt;xarray.DataArray &#x27;sst&#x27; (time: 464, lat: 720, lon: 1440)&gt;
-array([[[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        ...,
-        [-1.3066666, -1.3066666, -1.3073334, ..., -1.3066666,
-         -1.3066666, -1.3063333],
-        [-1.3096668, -1.3099998, -1.3099998, ..., -1.3093333,
-         -1.3093333, -1.3096668],
-        [-1.312    , -1.312    , -1.312    , ..., -1.312    ,
-         -1.312    , -1.312    ]],
-
-       [[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-...
-        [-1.7780645, -1.7780645, -1.7780645, ..., -1.778387 ,
-         -1.778387 , -1.778387 ],
-        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
-         -1.778387 , -1.778387 ],
-        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
-         -1.778387 , -1.778387 ]],
-
-       [[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        ...,
-        [-1.7738461, -1.7738461, -1.7738461, ..., -1.7738461,
-         -1.7738461, -1.7738461],
-        [-1.7746152, -1.7746152, -1.7746152, ..., -1.7746152,
-         -1.7746152, -1.7746152],
-        [-1.7749999, -1.7749999, -1.7749999, ..., -1.7749999,
-         -1.7749999, -1.7749999]]], dtype=float32)
-Coordinates:
-  * time     (time) datetime64[ns] 1981-09-01 1981-10-01 ... 2020-04-01
-    zlev     float32 0.0
-  * lat      (lat) float32 -89.875 -89.625 -89.375 ... 89.375 89.625 89.875
-  * lon      (lon) float32 0.125 0.375 0.625 0.875 ... 359.375 359.625 359.875</pre><div class='xr-wrap' hidden><div class='xr-header'><div class='xr-obj-type'>xarray.DataArray</div><div class='xr-array-name'>'sst'</div><ul class='xr-dim-list'><li><span class='xr-has-index'>time</span>: 464</li><li><span class='xr-has-index'>lat</span>: 720</li><li><span class='xr-has-index'>lon</span>: 1440</li></ul></div><ul class='xr-sections'><li class='xr-section-item'><div class='xr-array-wrap'><input id='section-b9a70328-e31f-427d-ba76-0fbffda8670f' class='xr-array-in' type='checkbox' checked><label for='section-b9a70328-e31f-427d-ba76-0fbffda8670f' title='Show/hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-array-preview xr-preview'><span>nan nan nan nan nan ... -1.7749999 -1.7749999 -1.7749999 -1.7749999</span></div><div class='xr-array-data'><pre>array([[[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        ...,
-        [-1.3066666, -1.3066666, -1.3073334, ..., -1.3066666,
-         -1.3066666, -1.3063333],
-        [-1.3096668, -1.3099998, -1.3099998, ..., -1.3093333,
-         -1.3093333, -1.3096668],
-        [-1.312    , -1.312    , -1.312    , ..., -1.312    ,
-         -1.312    , -1.312    ]],
-
-       [[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-...
-        [-1.7780645, -1.7780645, -1.7780645, ..., -1.778387 ,
-         -1.778387 , -1.778387 ],
-        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
-         -1.778387 , -1.778387 ],
-        [-1.778387 , -1.778387 , -1.778387 , ..., -1.778387 ,
-         -1.778387 , -1.778387 ]],
-
-       [[       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        [       nan,        nan,        nan, ...,        nan,
-                nan,        nan],
-        ...,
-        [-1.7738461, -1.7738461, -1.7738461, ..., -1.7738461,
-         -1.7738461, -1.7738461],
-        [-1.7746152, -1.7746152, -1.7746152, ..., -1.7746152,
-         -1.7746152, -1.7746152],
-        [-1.7749999, -1.7749999, -1.7749999, ..., -1.7749999,
-         -1.7749999, -1.7749999]]], dtype=float32)</pre></div></div></li><li class='xr-section-item'><input id='section-2015f313-ec86-46cf-91de-7668778732ec' class='xr-section-summary-in' type='checkbox'  checked><label for='section-2015f313-ec86-46cf-91de-7668778732ec' class='xr-section-summary' >Coordinates: <span>(4)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><ul class='xr-var-list'><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>time</span></div><div class='xr-var-dims'>(time)</div><div class='xr-var-dtype'>datetime64[ns]</div><div class='xr-var-preview xr-preview'>1981-09-01 ... 2020-04-01</div><input id='attrs-5337d6d1-51c2-4fbd-b838-a07291dc0e4a' class='xr-var-attrs-in' type='checkbox' disabled><label for='attrs-5337d6d1-51c2-4fbd-b838-a07291dc0e4a' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-c5ad703d-8e51-4060-abec-02b1fc8e23d9' class='xr-var-data-in' type='checkbox'><label for='data-c5ad703d-8e51-4060-abec-02b1fc8e23d9' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'></dl></div><div class='xr-var-data'><pre>array([&#x27;1981-09-01T00:00:00.000000000&#x27;, &#x27;1981-10-01T00:00:00.000000000&#x27;,
-       &#x27;1981-11-01T00:00:00.000000000&#x27;, ..., &#x27;2020-02-01T00:00:00.000000000&#x27;,
-       &#x27;2020-03-01T00:00:00.000000000&#x27;, &#x27;2020-04-01T00:00:00.000000000&#x27;],
-      dtype=&#x27;datetime64[ns]&#x27;)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span>zlev</span></div><div class='xr-var-dims'>()</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>0.0</div><input id='attrs-ab1d04f0-19fe-427e-a36d-bf032f34ac02' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-ab1d04f0-19fe-427e-a36d-bf032f34ac02' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-8f4cefc5-3ee4-44e5-a93f-6ac664301d22' class='xr-var-data-in' type='checkbox'><label for='data-8f4cefc5-3ee4-44e5-a93f-6ac664301d22' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Sea surface height</dd><dt><span>units :</span></dt><dd>meters</dd><dt><span>actual_range :</span></dt><dd>0, 0</dd></dl></div><div class='xr-var-data'><pre>array(0., dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lat</span></div><div class='xr-var-dims'>(lat)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>-89.875 -89.625 ... 89.625 89.875</div><input id='attrs-48842ff6-5819-4556-b9a8-92ea0c57e640' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-48842ff6-5819-4556-b9a8-92ea0c57e640' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-6cdbb5a1-23f3-48a9-b3cb-41c7dd541e43' class='xr-var-data-in' type='checkbox'><label for='data-6cdbb5a1-23f3-48a9-b3cb-41c7dd541e43' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Latitude</dd><dt><span>units :</span></dt><dd>degrees_north</dd><dt><span>grids :</span></dt><dd>Uniform grid from -89.875 to 89.875 by 0.25</dd></dl></div><div class='xr-var-data'><pre>array([-89.875, -89.625, -89.375, ...,  89.375,  89.625,  89.875],
-      dtype=float32)</pre></div></li><li class='xr-var-item'><div class='xr-var-name'><span class='xr-has-index'>lon</span></div><div class='xr-var-dims'>(lon)</div><div class='xr-var-dtype'>float32</div><div class='xr-var-preview xr-preview'>0.125 0.375 ... 359.625 359.875</div><input id='attrs-c6754206-4273-49ad-8c2a-c0a26167fb27' class='xr-var-attrs-in' type='checkbox' ><label for='attrs-c6754206-4273-49ad-8c2a-c0a26167fb27' title='Show/Hide attributes'><svg class='icon xr-icon-file-text2'><use xlink:href='#icon-file-text2'></use></svg></label><input id='data-d04e6644-9d49-4c6b-b908-2ae0731ca3e1' class='xr-var-data-in' type='checkbox'><label for='data-d04e6644-9d49-4c6b-b908-2ae0731ca3e1' title='Show/Hide data repr'><svg class='icon xr-icon-database'><use xlink:href='#icon-database'></use></svg></label><div class='xr-var-attrs'><dl class='xr-attrs'><dt><span>long_name :</span></dt><dd>Longitude</dd><dt><span>units :</span></dt><dd>degrees_east</dd><dt><span>grids :</span></dt><dd>Uniform grid from 0.125 to 359.875 by 0.25</dd></dl></div><div class='xr-var-data'><pre>array([1.25000e-01, 3.75000e-01, 6.25000e-01, ..., 3.59375e+02, 3.59625e+02,
-       3.59875e+02], dtype=float32)</pre></div></li></ul></div></li><li class='xr-section-item'><input id='section-c1d24935-9f8d-4ef4-a900-3d6fd60420cf' class='xr-section-summary-in' type='checkbox' disabled ><label for='section-c1d24935-9f8d-4ef4-a900-3d6fd60420cf' class='xr-section-summary'  title='Expand/collapse section'>Attributes: <span>(0)</span></label><div class='xr-section-inline-details'></div><div class='xr-section-details'><dl class='xr-attrs'></dl></div></li></ul></div></div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -601,7 +124,7 @@ Coordinates:
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.colorbar.Colorbar at 0x2b9bbe714520&gt;</pre>
+<pre>&lt;matplotlib.colorbar.Colorbar at 0x2af9c0c50b20&gt;</pre>
 </div>
 
 </div>
@@ -679,136 +202,6 @@ Coordinates:
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>/glade/u/home/scanh/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/array/numpy_compat.py:41: RuntimeWarning: invalid value encountered in true_divide
-  x = np.divide(x1, x2, out)
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-111-2fa376126f41&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span> 
-<span class="ansi-green-intense-fg ansi-bold">     11</span> <span class="ansi-red-fg"># resulting coefficients of the model</span>
-<span class="ansi-green-fg">---&gt; 12</span><span class="ansi-red-fg"> </span>sst_mod <span class="ansi-blue-fg">=</span> xr<span class="ansi-blue-fg">.</span>DataArray<span class="ansi-blue-fg">(</span>pmodel_da<span class="ansi-blue-fg">.</span>dot<span class="ansi-blue-fg">(</span>mnsst<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#39;coeff&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;lat&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;lon&#39;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">&#39;coeff&#39;</span><span class="ansi-blue-fg">:</span>np<span class="ansi-blue-fg">.</span>arange<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">7</span><span class="ansi-blue-fg">,</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lat&#39;</span><span class="ansi-blue-fg">:</span>mnsst<span class="ansi-blue-fg">.</span>lat<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lon&#39;</span><span class="ansi-blue-fg">:</span>mnsst<span class="ansi-blue-fg">.</span>lon<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">}</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     13</span> 
-<span class="ansi-green-intense-fg ansi-bold">     14</span> <span class="ansi-red-fg"># Construction of the mean, trend, and seasonal cycle</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/dataarray.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, data, coords, dims, name, attrs, indexes, fastpath)</span>
-<span class="ansi-green-intense-fg ansi-bold">    341</span> 
-<span class="ansi-green-intense-fg ansi-bold">    342</span>             data <span class="ansi-blue-fg">=</span> _check_data_shape<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-fg">--&gt; 343</span><span class="ansi-red-fg">             </span>data <span class="ansi-blue-fg">=</span> as_compatible_data<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    344</span>             coords<span class="ansi-blue-fg">,</span> dims <span class="ansi-blue-fg">=</span> _infer_coords_and_dims<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">,</span> coords<span class="ansi-blue-fg">,</span> dims<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    345</span>             variable <span class="ansi-blue-fg">=</span> Variable<span class="ansi-blue-fg">(</span>dims<span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">,</span> attrs<span class="ansi-blue-fg">,</span> fastpath<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">as_compatible_data</span><span class="ansi-blue-fg">(data, fastpath)</span>
-<span class="ansi-green-intense-fg ansi-bold">    215</span> 
-<span class="ansi-green-intense-fg ansi-bold">    216</span>     <span class="ansi-red-fg"># we don&#39;t want nested self-described arrays</span>
-<span class="ansi-green-fg">--&gt; 217</span><span class="ansi-red-fg">     </span>data <span class="ansi-blue-fg">=</span> getattr<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;values&#34;</span><span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    218</span> 
-<span class="ansi-green-intense-fg ansi-bold">    219</span>     <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> np<span class="ansi-blue-fg">.</span>ma<span class="ansi-blue-fg">.</span>MaskedArray<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/dataarray.py</span> in <span class="ansi-cyan-fg">values</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    567</span>     <span class="ansi-green-fg">def</span> values<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">-&gt;</span> np<span class="ansi-blue-fg">.</span>ndarray<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    568</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;The array&#39;s data as a numpy.ndarray&#34;&#34;&#34;</span>
-<span class="ansi-green-fg">--&gt; 569</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>variable<span class="ansi-blue-fg">.</span>values
-<span class="ansi-green-intense-fg ansi-bold">    570</span> 
-<span class="ansi-green-intense-fg ansi-bold">    571</span>     <span class="ansi-blue-fg">@</span>values<span class="ansi-blue-fg">.</span>setter
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">values</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    508</span>     <span class="ansi-green-fg">def</span> values<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    509</span>         <span class="ansi-blue-fg">&#34;&#34;&#34;The variable&#39;s data as a numpy.ndarray&#34;&#34;&#34;</span>
-<span class="ansi-green-fg">--&gt; 510</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> _as_array_or_item<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>_data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    511</span> 
-<span class="ansi-green-intense-fg ansi-bold">    512</span>     <span class="ansi-blue-fg">@</span>values<span class="ansi-blue-fg">.</span>setter
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">_as_array_or_item</span><span class="ansi-blue-fg">(data)</span>
-<span class="ansi-green-intense-fg ansi-bold">    270</span>         data <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">.</span>get<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    271</span>     <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 272</span><span class="ansi-red-fg">         </span>data <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>asarray<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    273</span>     <span class="ansi-green-fg">if</span> data<span class="ansi-blue-fg">.</span>ndim <span class="ansi-blue-fg">==</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    274</span>         <span class="ansi-green-fg">if</span> data<span class="ansi-blue-fg">.</span>dtype<span class="ansi-blue-fg">.</span>kind <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#34;M&#34;</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/numpy/core/_asarray.py</span> in <span class="ansi-cyan-fg">asarray</span><span class="ansi-blue-fg">(a, dtype, order)</span>
-<span class="ansi-green-intense-fg ansi-bold">     81</span> 
-<span class="ansi-green-intense-fg ansi-bold">     82</span>     &#34;&#34;&#34;
-<span class="ansi-green-fg">---&gt; 83</span><span class="ansi-red-fg">     </span><span class="ansi-green-fg">return</span> array<span class="ansi-blue-fg">(</span>a<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">,</span> copy<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> order<span class="ansi-blue-fg">=</span>order<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     84</span> 
-<span class="ansi-green-intense-fg ansi-bold">     85</span> 
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/array/core.py</span> in <span class="ansi-cyan-fg">__array__</span><span class="ansi-blue-fg">(self, dtype, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1374</span> 
-<span class="ansi-green-intense-fg ansi-bold">   1375</span>     <span class="ansi-green-fg">def</span> __array__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">-&gt; 1376</span><span class="ansi-red-fg">         </span>x <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>compute<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1377</span>         <span class="ansi-green-fg">if</span> dtype <span class="ansi-green-fg">and</span> x<span class="ansi-blue-fg">.</span>dtype <span class="ansi-blue-fg">!=</span> dtype<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">   1378</span>             x <span class="ansi-blue-fg">=</span> x<span class="ansi-blue-fg">.</span>astype<span class="ansi-blue-fg">(</span>dtype<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/base.py</span> in <span class="ansi-cyan-fg">compute</span><span class="ansi-blue-fg">(self, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    165</span>         dask<span class="ansi-blue-fg">.</span>base<span class="ansi-blue-fg">.</span>compute
-<span class="ansi-green-intense-fg ansi-bold">    166</span>         &#34;&#34;&#34;
-<span class="ansi-green-fg">--&gt; 167</span><span class="ansi-red-fg">         </span><span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">=</span> compute<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> traverse<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    168</span>         <span class="ansi-green-fg">return</span> result
-<span class="ansi-green-intense-fg ansi-bold">    169</span> 
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/base.py</span> in <span class="ansi-cyan-fg">compute</span><span class="ansi-blue-fg">(*args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    450</span>         postcomputes<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">.</span>__dask_postcompute__<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    451</span> 
-<span class="ansi-green-fg">--&gt; 452</span><span class="ansi-red-fg">     </span>results <span class="ansi-blue-fg">=</span> schedule<span class="ansi-blue-fg">(</span>dsk<span class="ansi-blue-fg">,</span> keys<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    453</span>     <span class="ansi-green-fg">return</span> repack<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">[</span>f<span class="ansi-blue-fg">(</span>r<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> r<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span>f<span class="ansi-blue-fg">,</span> a<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">in</span> zip<span class="ansi-blue-fg">(</span>results<span class="ansi-blue-fg">,</span> postcomputes<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    454</span> 
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/threaded.py</span> in <span class="ansi-cyan-fg">get</span><span class="ansi-blue-fg">(dsk, result, cache, num_workers, pool, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">     74</span>                 pools<span class="ansi-blue-fg">[</span>thread<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">[</span>num_workers<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> pool
-<span class="ansi-green-intense-fg ansi-bold">     75</span> 
-<span class="ansi-green-fg">---&gt; 76</span><span class="ansi-red-fg">     results = get_async(
-</span><span class="ansi-green-intense-fg ansi-bold">     77</span>         pool<span class="ansi-blue-fg">.</span>apply_async<span class="ansi-blue-fg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">     78</span>         len<span class="ansi-blue-fg">(</span>pool<span class="ansi-blue-fg">.</span>_pool<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/local.py</span> in <span class="ansi-cyan-fg">get_async</span><span class="ansi-blue-fg">(apply_async, num_workers, dsk, result, cache, get_id, rerun_exceptions_locally, pack_exception, raise_exception, callbacks, dumps, loads, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    473</span>             <span class="ansi-red-fg"># Main loop, wait on tasks to finish, insert new ones</span>
-<span class="ansi-green-intense-fg ansi-bold">    474</span>             <span class="ansi-green-fg">while</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;waiting&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">or</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;ready&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-green-fg">or</span> state<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;running&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 475</span><span class="ansi-red-fg">                 </span>key<span class="ansi-blue-fg">,</span> res_info<span class="ansi-blue-fg">,</span> failed <span class="ansi-blue-fg">=</span> queue_get<span class="ansi-blue-fg">(</span>queue<span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    476</span>                 <span class="ansi-green-fg">if</span> failed<span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    477</span>                     exc<span class="ansi-blue-fg">,</span> tb <span class="ansi-blue-fg">=</span> loads<span class="ansi-blue-fg">(</span>res_info<span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/dask/local.py</span> in <span class="ansi-cyan-fg">queue_get</span><span class="ansi-blue-fg">(q)</span>
-<span class="ansi-green-intense-fg ansi-bold">    131</span> 
-<span class="ansi-green-intense-fg ansi-bold">    132</span>     <span class="ansi-green-fg">def</span> queue_get<span class="ansi-blue-fg">(</span>q<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 133</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> q<span class="ansi-blue-fg">.</span>get<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    134</span> 
-<span class="ansi-green-intense-fg ansi-bold">    135</span> 
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/queue.py</span> in <span class="ansi-cyan-fg">get</span><span class="ansi-blue-fg">(self, block, timeout)</span>
-<span class="ansi-green-intense-fg ansi-bold">    169</span>             <span class="ansi-green-fg">elif</span> timeout <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    170</span>                 <span class="ansi-green-fg">while</span> <span class="ansi-green-fg">not</span> self<span class="ansi-blue-fg">.</span>_qsize<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 171</span><span class="ansi-red-fg">                     </span>self<span class="ansi-blue-fg">.</span>not_empty<span class="ansi-blue-fg">.</span>wait<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    172</span>             <span class="ansi-green-fg">elif</span> timeout <span class="ansi-blue-fg">&lt;</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-intense-fg ansi-bold">    173</span>                 <span class="ansi-green-fg">raise</span> ValueError<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;&#39;timeout&#39; must be a non-negative number&#34;</span><span class="ansi-blue-fg">)</span>
-
-<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/threading.py</span> in <span class="ansi-cyan-fg">wait</span><span class="ansi-blue-fg">(self, timeout)</span>
-<span class="ansi-green-intense-fg ansi-bold">    310</span>         <span class="ansi-green-fg">try</span><span class="ansi-blue-fg">:</span>    <span class="ansi-red-fg"># restore state no matter what (e.g., KeyboardInterrupt)</span>
-<span class="ansi-green-intense-fg ansi-bold">    311</span>             <span class="ansi-green-fg">if</span> timeout <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
-<span class="ansi-green-fg">--&gt; 312</span><span class="ansi-red-fg">                 </span>waiter<span class="ansi-blue-fg">.</span>acquire<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    313</span>                 gotit <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">True</span>
-<span class="ansi-green-intense-fg ansi-bold">    314</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
-
-<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -938,6 +331,29 @@ Coordinates:
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">IndexError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-13-2729292925f5&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-red-fg"># Intialize xarray DataArrays for SSTa relative to the threshold defined above in Step 5.</span>
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg"> </span>ssta_prc_notrend <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>empty<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">(</span>sst_notrend<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> sst_notrend<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> sst_notrend<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">2</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> prct_notrend<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> ssta_prc_notrend<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">:</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>nan
+<span class="ansi-green-intense-fg ansi-bold">      4</span> ssta_prc_notrend = xr.DataArray(ssta_prc_notrend,
+<span class="ansi-green-intense-fg ansi-bold">      5</span>                                 dims<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;time&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lat&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;lon&#39;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">&#39;quantile&#39;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+
+<span class="ansi-red-fg">IndexError</span>: tuple index out of range</pre>
+</div>
+</div>
+
 </div>
 </div>
 

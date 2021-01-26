@@ -13,6 +13,12 @@ entries:
       title: Ocetrac
       url: core.html
     - output: web,pdf
+      title: 00_preprocess.ipynb
+      url: preprocess.html
+    - output: web,pdf
+      title: 01_track.ipynb
+      url: track.html
+    - output: web,pdf
       title: Title
       url: visualize.html
     output: web
