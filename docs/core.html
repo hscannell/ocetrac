@@ -59,6 +59,172 @@ nb_path: "00_core.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># ID[2,:,:].plot()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;matplotlib.collections.QuadMesh at 0x2b11bd6385b0&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">unique_labels</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39; Impose periodic boundary and wrap labels&#39;&#39;&#39;</span>
+    
+    <span class="n">lon_0</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">lon</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">lon_360</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lon_0</span><span class="p">)</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lon_0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">lon_0</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">i</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">values_360</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lon_360</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">lon_360</span><span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span> <span class="c1">#[0]</span>
+        <span class="n">wrap_labels</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">wrap_labels</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">wrap_labels</span> <span class="o">==</span> <span class="n">values_360</span><span class="p">)]</span> <span class="o">=</span> <span class="n">i</span> 
+        
+    <span class="k">return</span> <span class="n">wrap_labels</span>
+
+
+<span class="k">def</span> <span class="nf">_relabel</span><span class="p">(</span><span class="n">wrap_labels</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;relabel objects with continuous IDs&#39;&#39;&#39;</span>
+    
+    <span class="n">new_labels</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">apply_ufunc</span><span class="p">(</span>
+        <span class="n">_wrap</span><span class="p">,</span> 
+        <span class="n">wrap_labels</span><span class="p">,</span>
+        <span class="n">input_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="p">]],</span>
+        <span class="n">output_core_dims</span><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="p">[]],</span>
+        <span class="n">output_dtypes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;i4&#39;</span><span class="p">,</span><span class="s1">&#39;i4&#39;</span><span class="p">],</span>
+        <span class="n">dask</span><span class="o">=</span><span class="s1">&#39;parallelized&#39;</span><span class="p">,</span>
+        <span class="n">vectorize</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    
+    <span class="n">new_labels</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">new_labels</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">new_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        
+    <span class="k">return</span> <span class="n">new_labels</span>
+
+<span class="c1">## Toy data array</span>
+<span class="n">unique_labels</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="nb">int</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">])</span>
+<span class="n">unique_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">unique_labels</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">8</span> 
+<span class="n">unique_labels</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">unique_labels</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">3</span><span class="p">:,</span> <span class="o">-</span><span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span> 
+<span class="n">unique_labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">wrap_labels</span> <span class="o">=</span> <span class="n">_wrap</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:])</span>
+<span class="n">new_labels</span> <span class="o">=</span> <span class="n">_relabel</span><span class="p">(</span><span class="n">wrap_labels</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-61-35df58b96c55&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">     41</span> unique_labels<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">-</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">5</span><span class="ansi-blue-fg">:</span><span class="ansi-cyan-fg">7</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">:</span><span class="ansi-cyan-fg">6</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-cyan-fg">3</span>
+<span class="ansi-green-intense-fg ansi-bold">     42</span> 
+<span class="ansi-green-fg">---&gt; 43</span><span class="ansi-red-fg"> </span>wrap_labels <span class="ansi-blue-fg">=</span> _wrap<span class="ansi-blue-fg">(</span>a<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     44</span> new_labels <span class="ansi-blue-fg">=</span> _relabel<span class="ansi-blue-fg">(</span>wrap_labels<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-61-35df58b96c55&gt;</span> in <span class="ansi-cyan-fg">_wrap</span><span class="ansi-blue-fg">(unique_labels)</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span>         values_360 <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>unique<span class="ansi-blue-fg">(</span>lon_360<span class="ansi-blue-fg">[</span>c<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">[</span>np<span class="ansi-blue-fg">.</span>unique<span class="ansi-blue-fg">(</span>lon_360<span class="ansi-blue-fg">[</span>c<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span> <span class="ansi-blue-fg">!=</span> <span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span> <span class="ansi-red-fg">#[0]</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>         wrap_labels <span class="ansi-blue-fg">=</span> unique_labels<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 14</span><span class="ansi-red-fg">         </span>wrap_labels<span class="ansi-blue-fg">[</span>np<span class="ansi-blue-fg">.</span>where<span class="ansi-blue-fg">(</span>wrap_labels <span class="ansi-blue-fg">==</span> values_360<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> i <span class="ansi-red-fg"># how can we perserve da without changing it here. i.e. reasign it.</span>
+<span class="ansi-green-intense-fg ansi-bold">     15</span> 
+<span class="ansi-green-intense-fg ansi-bold">     16</span>     <span class="ansi-green-fg">return</span> wrap_labels
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/dataarray.py</span> in <span class="ansi-cyan-fg">func</span><span class="ansi-blue-fg">(self, other)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2763</span> 
+<span class="ansi-green-intense-fg ansi-bold">   2764</span>             variable = (
+<span class="ansi-green-fg">-&gt; 2765</span><span class="ansi-red-fg">                 </span>f<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>variable<span class="ansi-blue-fg">,</span> other_variable<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2766</span>                 <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> reflexive
+<span class="ansi-green-intense-fg ansi-bold">   2767</span>                 <span class="ansi-green-fg">else</span> f<span class="ansi-blue-fg">(</span>other_variable<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>variable<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/nputils.py</span> in <span class="ansi-cyan-fg">array_eq</span><span class="ansi-blue-fg">(self, other)</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>     <span class="ansi-green-fg">with</span> warnings<span class="ansi-blue-fg">.</span>catch_warnings<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span>         warnings<span class="ansi-blue-fg">.</span>filterwarnings<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;ignore&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">r&#34;elementwise comparison failed&#34;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> _ensure_bool_is_ndarray<span class="ansi-blue-fg">(</span>self <span class="ansi-blue-fg">==</span> other<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">,</span> other<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     74</span> 
+<span class="ansi-green-intense-fg ansi-bold">     75</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/variable.py</span> in <span class="ansi-cyan-fg">func</span><span class="ansi-blue-fg">(self, other)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2128</span>             <span class="ansi-green-fg">with</span> np<span class="ansi-blue-fg">.</span>errstate<span class="ansi-blue-fg">(</span>all<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;ignore&#34;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2129</span>                 new_data = (
+<span class="ansi-green-fg">-&gt; 2130</span><span class="ansi-red-fg">                     </span>f<span class="ansi-blue-fg">(</span>self_data<span class="ansi-blue-fg">,</span> other_data<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2131</span>                     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> reflexive
+<span class="ansi-green-intense-fg ansi-bold">   2132</span>                     <span class="ansi-green-fg">else</span> f<span class="ansi-blue-fg">(</span>other_data<span class="ansi-blue-fg">,</span> self_data<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/nputils.py</span> in <span class="ansi-cyan-fg">array_eq</span><span class="ansi-blue-fg">(self, other)</span>
+<span class="ansi-green-intense-fg ansi-bold">     71</span>     <span class="ansi-green-fg">with</span> warnings<span class="ansi-blue-fg">.</span>catch_warnings<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     72</span>         warnings<span class="ansi-blue-fg">.</span>filterwarnings<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;ignore&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">r&#34;elementwise comparison failed&#34;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 73</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> _ensure_bool_is_ndarray<span class="ansi-blue-fg">(</span>self <span class="ansi-blue-fg">==</span> other<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">,</span> other<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     74</span> 
+<span class="ansi-green-intense-fg ansi-bold">     75</span> 
+
+<span class="ansi-green-fg">~/miniconda3/envs/ocetrac-2020/lib/python3.9/site-packages/xarray/core/nputils.py</span> in <span class="ansi-cyan-fg">_ensure_bool_is_ndarray</span><span class="ansi-blue-fg">(result, *args)</span>
+<span class="ansi-green-intense-fg ansi-bold">     62</span>     <span class="ansi-red-fg"># cases</span>
+<span class="ansi-green-intense-fg ansi-bold">     63</span>     <span class="ansi-green-fg">if</span> isinstance<span class="ansi-blue-fg">(</span>result<span class="ansi-blue-fg">,</span> bool<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 64</span><span class="ansi-red-fg">         </span>shape <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>broadcast<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>shape
+<span class="ansi-green-intense-fg ansi-bold">     65</span>         constructor <span class="ansi-blue-fg">=</span> np<span class="ansi-blue-fg">.</span>ones <span class="ansi-green-fg">if</span> result <span class="ansi-green-fg">else</span> np<span class="ansi-blue-fg">.</span>zeros
+<span class="ansi-green-intense-fg ansi-bold">     66</span>         result <span class="ansi-blue-fg">=</span> constructor<span class="ansi-blue-fg">(</span>shape<span class="ansi-blue-fg">,</span> dtype<span class="ansi-blue-fg">=</span>bool<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">ValueError</span>: shape mismatch: objects cannot be broadcast to a single shape</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}

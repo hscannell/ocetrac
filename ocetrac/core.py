@@ -37,7 +37,7 @@ def _morphological_operations(da, radius=8):
     def binary_open_close(bitmap_binary):
         bitmap_binary_padded = np.pad(bitmap_binary,
                                       ((diameter, diameter), (diameter, diameter)),
-                                      mode='reflect')
+                                      mode='wrap')
         s1 = scipy.ndimage.binary_closing(bitmap_binary_padded, se, iterations=1)
         s2 = scipy.ndimage.binary_opening(s1, se, iterations=1)
         unpadded= s2[diameter:-diameter, diameter:-diameter]
