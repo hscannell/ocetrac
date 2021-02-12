@@ -77,6 +77,31 @@ def _id(binary_images):
     return unique_labels
 
 # Cell
+def _filter_area(mo_binary, min_size_quartile):
+    '''calculatre area with regionprops'''
+
+    unique_labels = _id(mo_binary)
+    props = regionprops(unique_labels.values.astype('int'))
+
+    labelprops = [p.label for p in props]
+    labelprops = xr.DataArray(labelprops, dims=['label'], coords={'label': labelprops})
+    coords = [p.coords for p in props] # time, lat, lon
+
+    area = []
+    res = mo_binary.lat[1].values-mo_binary.lat[0].values # resolution of latitude
+    for i in range(len(coords)):
+        area.append(np.sum((res*111)*np.cos(np.radians(mo_binary.lat[coords[i][:,0]].values)) * (res*111)))
+    area = xr.DataArray(area, dims=['label'], coords={'label': labelprops})
+    min_area = np.percentile(area, min_size_quartile*100)
+    print('min area (km2) \t', min_area)
+
+    keep_labels = labelprops.where(area>=min_area, drop=True)
+    ID_area = xr.DataArray(np.isin(unique_labels, keep_labels).reshape(unique_labels.shape),
+                               dims=unique_labels.dims, coords=unique_labels.coords)
+
+    return area, min_area, ID_area, labelprops
+
+# Cell
 from skimage.measure import label as label_np
 
 def _label_either(data, **kwargs):
@@ -94,6 +119,35 @@ def _label_either(data, **kwargs):
     else:
         label_func = label_np
     return label_func(data, **kwargs)
+
+
+# Cell
+def _wrap(labels):
+    ''' Impose periodic boundary and wrap labels'''
+    first_column = labels[..., 0]
+    last_column = labels[..., -1]
+
+    # Here's a test to find the rows where both column contain an integer greater than 0
+    overlap = first_column * last_column
+    match = np.where(overlap > 0) # We get a match where the product of the two columns is > 0
+
+    # Where our test passes, find the unique labels in the last column that we want to replace.
+    bad_label = np.unique(last_column[match[0],match[1]])
+
+    # Similarly, find the unique labels of the frist column that we will use to relabel the last_column.
+    new_label = np.unique(first_column[match[0],match[1]])
+
+    # This loop iterates over the bad labels and replaces all instances of this bad label with the new label.
+    for i in enumerate(bad_label):
+        labels[np.where(labels == i[1])] = new_label[i[0]]
+
+    # Reorder labels
+    new_labels = xr.DataArray(np.unique(labels, return_inverse=True)[1].reshape(labels.shape))
+
+    # recalculate the total number of labels
+    N = np.max(new_labels)
+
+    return new_labels, N
 
 
 # Cell

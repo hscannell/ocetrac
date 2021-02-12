@@ -59,38 +59,6 @@ nb_path: "00_core.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_filter_area</span><span class="p">(</span><span class="n">mo_binary</span><span class="p">,</span> <span class="n">min_size_quartile</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;calculatre area with regionprops&#39;&#39;&#39;</span>
-    
-    <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">_id</span><span class="p">(</span><span class="n">mo_binary</span><span class="p">)</span>
-    <span class="n">props</span> <span class="o">=</span> <span class="n">regionprops</span><span class="p">(</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">))</span>
-
-    <span class="n">labelprops</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">props</span><span class="p">]</span>
-    <span class="n">labelprops</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">labelprops</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">labelprops</span><span class="p">})</span> 
-    <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">coords</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">props</span><span class="p">]</span> <span class="c1"># time, lat, lon</span>
-
-    <span class="n">area</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">mo_binary</span><span class="o">.</span><span class="n">lat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">-</span><span class="n">mo_binary</span><span class="o">.</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="c1"># resolution of latitude</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)):</span>  
-        <span class="n">area</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">res</span><span class="o">*</span><span class="mi">111</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">mo_binary</span><span class="o">.</span><span class="n">lat</span><span class="p">[</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">res</span><span class="o">*</span><span class="mi">111</span><span class="p">)))</span>
-    <span class="n">area</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">],</span> <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">labelprops</span><span class="p">})</span>  
-    <span class="n">min_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">min_size_quartile</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;min area (km2) </span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">min_area</span><span class="p">)</span>  
-    
-    <span class="n">keep_labels</span> <span class="o">=</span> <span class="n">labelprops</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">area</span><span class="o">&gt;=</span><span class="n">min_area</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">ID_area</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">unique_labels</span><span class="p">,</span> <span class="n">keep_labels</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span>
-                               <span class="n">dims</span><span class="o">=</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">unique_labels</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">area</span><span class="p">,</span> <span class="n">min_area</span><span class="p">,</span> <span class="n">ID_area</span><span class="p">,</span> <span class="n">labelprops</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -105,41 +73,6 @@ nb_path: "00_core.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">_wrap</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39; Impose periodic boundary and wrap labels&#39;&#39;&#39;</span>
-    <span class="n">first_column</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">last_column</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    
-    <span class="c1"># Here&#39;s a test to find the rows where both column contain an integer greater than 0</span>
-    <span class="n">overlap</span> <span class="o">=</span> <span class="n">first_column</span> <span class="o">*</span> <span class="n">last_column</span> 
-    <span class="n">match</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># We get a match where the product of the two columns is &gt; 0</span>
-    
-    <span class="c1"># Where our test passes, find the unique labels in the last column that we want to replace.</span>
-    <span class="n">bad_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">last_column</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-    
-    <span class="c1"># Similarly, find the unique labels of the frist column that we will use to relabel the last_column.</span>
-    <span class="n">new_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">first_column</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
-    
-    <span class="c1"># This loop iterates over the bad labels and replaces all instances of this bad label with the new label.</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bad_label</span><span class="p">):</span>
-        <span class="n">labels</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="n">new_label</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-    
-    <span class="c1"># Reorder labels</span>
-    <span class="n">new_labels</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-    
-    <span class="c1"># recalculate the total number of labels </span>
-    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">new_labels</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">new_labels</span><span class="p">,</span> <span class="n">N</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
 
 </div>
     {% endraw %}
@@ -155,7 +88,7 @@ nb_path: "00_core.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="track" class="doc_header"><code>track</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L100" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>track</code>(<strong><code>da</code></strong>, <strong><code>radius</code></strong>=<em><code>8</code></em>, <strong><code>area_quantile</code></strong>=<em><code>0.75</code></em>)</p>
+<h4 id="track" class="doc_header"><code>track</code><a href="https://github.com/hscannell/ocetrac/tree/master/ocetrac/core.py#L154" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>track</code>(<strong><code>da</code></strong>, <strong><code>radius</code></strong>=<em><code>8</code></em>, <strong><code>area_quantile</code></strong>=<em><code>0.75</code></em>)</p>
 </blockquote>
 <p>Image labeling and tracking.</p>
 <h2 id="Parameters">Parameters<a class="anchor-link" href="#Parameters"> </a></h2><p>da : xarray.DataArray
@@ -191,26 +124,10 @@ nb_path: "00_core.ipynb"
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_labels</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="n">track</span><span class="p">(</span><span class="n">da_3D_dask</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">area_quantile</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>min area (km2) 	 44728.171852193336
-inital features identified 	 15
-final features tracked 	 4
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
