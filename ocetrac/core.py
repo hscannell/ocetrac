@@ -7,7 +7,10 @@ from nbdev.showdoc import *
 import xarray as xr
 import numpy as np
 import scipy.ndimage
-from skimage.measure import label, regionprops
+from skimage.measure import regionprops
+from skimage.measure import label as label_np
+import dask.array as dsa
+
 # import matplotlib.pyplot as plt
 
 
@@ -58,7 +61,7 @@ def _id(binary_images):
     '''label object from binary images, without trackin in time. '''
 
     unique_labels, num = xr.apply_ufunc(
-        label,
+        label_np,
         binary_images,
         kwargs={'return_num': True, 'connectivity': 2},
         input_core_dims=[['lat', 'lon', ]],
@@ -86,13 +89,15 @@ def _filter_area(mo_binary, min_size_quartile):
     labelprops = [p.label for p in props]
     labelprops = xr.DataArray(labelprops, dims=['label'], coords={'label': labelprops})
     coords = [p.coords for p in props] # time, lat, lon
-
-    area = []
-    res = mo_binary.lat[1].values-mo_binary.lat[0].values # resolution of latitude
-    for i in range(len(coords)):
-        area.append(np.sum((res*111)*np.cos(np.radians(mo_binary.lat[coords[i][:,0]].values)) * (res*111)))
-    area = xr.DataArray(area, dims=['label'], coords={'label': labelprops})
+    area = xr.DataArray([p.area for p in props], dims=['label'], coords={'label': labelprops})  # Number of pixels of the region.
     min_area = np.percentile(area, min_size_quartile*100)
+
+#     area = []
+#     res = mo_binary.lat[1].values-mo_binary.lat[0].values # resolution of latitude
+#     for i in range(len(coords)):
+#         area.append(np.sum((res*111)*np.cos(np.radians(mo_binary.lat[coords[i][:,0]].values)) * (res*111)))
+#     area = xr.DataArray(area, dims=['label'], coords={'label': labelprops})
+#     min_area = np.percentile(area, min_size_quartile*100)
     print('min area (km2) \t', min_area)
 
     keep_labels = labelprops.where(area>=min_area, drop=True)
@@ -102,8 +107,6 @@ def _filter_area(mo_binary, min_size_quartile):
     return area, min_area, ID_area, labelprops
 
 # Cell
-from skimage.measure import label as label_np
-
 def _label_either(data, **kwargs):
     if isinstance(data, dsa.Array):
         try:
@@ -127,22 +130,16 @@ def _wrap(labels):
     first_column = labels[..., 0]
     last_column = labels[..., -1]
 
-    # Here's a test to find the rows where both column contain an integer greater than 0
-    overlap = first_column * last_column
-    match = np.where(overlap > 0) # We get a match where the product of the two columns is > 0
+    unique_first = np.unique(first_column[first_column>0])
 
-    # Where our test passes, find the unique labels in the last column that we want to replace.
-    bad_label = np.unique(last_column[match[0],match[1]])
+    # This loop iterates over the unique values in the first column, finds the location of those values in
+    # the first columnm and then uses that index to replace the values in the last column with the first column value
+    for i in enumerate(unique_first):
+        new_ID = np.where(first_column == i[1])
+        bad_labels = np.unique(last_column[new_ID[0], new_ID[1]])
+        labels = np.where(labels == bad_labels, i[1], labels)
 
-    # Similarly, find the unique labels of the frist column that we will use to relabel the last_column.
-    new_label = np.unique(first_column[match[0],match[1]])
-
-    # This loop iterates over the bad labels and replaces all instances of this bad label with the new label.
-    for i in enumerate(bad_label):
-        labels[np.where(labels == i[1])] = new_label[i[0]]
-
-    # Reorder labels
-    new_labels = xr.DataArray(np.unique(labels, return_inverse=True)[1].reshape(labels.shape))
+    new_labels = np.unique(labels, return_inverse=True)[1].reshape(labels.shape)
 
     # recalculate the total number of labels
     N = np.max(new_labels)
@@ -151,7 +148,7 @@ def _wrap(labels):
 
 
 # Cell
-def track(da, radius=8, area_quantile=0.75):
+def track(da, mask, radius=8, area_quantile=0.75):
     '''Image labeling and tracking.
 
     Parameters
@@ -165,6 +162,9 @@ def track(da, radius=8, area_quantile=0.75):
     area_quantile : float
         quantile used to define the threshold of the smallest area object retained in tracking.
 
+    mask : xarray.DataArray
+        The mask of ponts to ignore. Must be binary.
+
     Returns
     -------
     labels : xarray.DataArray
@@ -174,14 +174,28 @@ def track(da, radius=8, area_quantile=0.75):
     # Converts data to binary, defines structuring element, and performs morphological closing then opening
     binary_images = _morphological_operations(da, radius=radius)
 
-    area, min_area, ID_area, labelprops = _filter_area(mo_binary, 0)
+    area, min_area, ID_area, labelprops = _filter_area(binary_images, area_quantile)
+
+#     if mask.any():
+#         try:
+#             ID_area = ID_area.where(mask==1, drop=False, other=0)
+#             labels, num = _label_either(ID_area, return_num= True, connectivity=3)
+#         except ImportError:
+#             raise ImportError(
+#                 "Mask not used.  "
+#                 "Check that dimensions equal da and that it contains a binary set."
+#             )
+#     else:
+#         labels, num = _label_either(ID_area, return_num= True, connectivity=3)
+
+    # Apply mask
+#     ID_area = ID_area.where(mask==1, drop=False, other=0)
 
     labels, num = _label_either(ID_area, return_num= True, connectivity=3)
 
     new_labels, N = _wrap(labels)
+    new_labels = xr.DataArray(new_labels, coords=da.coords)
 
-
-    ### ! Reapply land maks HERE
 
     # Calculate Percent of total MHW area retained
     tot_area = int(np.sum(area.values))
@@ -189,11 +203,10 @@ def track(da, radius=8, area_quantile=0.75):
     small_area = int(np.sum(small_area.values))
     percent_area_kept = 1-(small_area/tot_area)
 
-    features = _id(ID_area)
-    features = features.rename('labels')
-    features.attrs['min_area'] = min_area
-    features.attrs['percent_area_kept'] = percent_area_kept
-    print('inital features identified \t', int(features.max().values))
+    new_labels = new_labels.rename('labels')
+    new_labels.attrs['min_area'] = min_area
+    new_labels.attrs['percent_area_kept'] = percent_area_kept
+    print('inital features identified \t', int(new_labels.max().values))
 
 
     print('final features tracked \t', int(N))

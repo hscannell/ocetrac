@@ -20,7 +20,7 @@ entries:
       url: track.html
     - output: web,pdf
       title: Title
-      url: visualize.html
+      url: debug_core.html
     output: web
     title: ocetrac
   output: web
